@@ -42,7 +42,10 @@ gemini <- function(prompt,
   
   # Add new message
   if(!exists("chatHistory")){
-    chatHistory <- NULL
+    chatHistory <<- list(list(
+      role = 'user',
+      parts = list(list(text = prompt))
+    ))
   } else{
     chatHistory <<- append(chatHistory, list(list(
       role = 'user',
@@ -87,58 +90,6 @@ gemini <- function(prompt,
     }
   }
 }
-
-# gemini <- function(prompt,
-#                    temperature = 0.7,
-#                    api_key,
-#                    model = "gemini-pro") {
-#   if (nchar(api_key) < 1) {
-#     api_key <- readline("Paste your API key here: ")
-#     Sys.setenv(GEMINI_API_KEY = api_key)
-#   }
-#   
-#   model_query <- paste0(model, ":generateContent")
-#   
-#   # Add new message
-#   if(!exists("chatHistory")){
-#     chatHistory <- NULL
-#   } else{
-#     chatHistory <<- append(chatHistory, list(list(
-#       role = 'user',
-#       parts = list(list(text = prompt))
-#     )))
-#   }
-#   
-#   response <- POST(
-#     url = paste0(
-#       "https://generativelanguage.googleapis.com/v1beta/models/",
-#       model_query
-#     ),
-#     query = list(key = api_key),
-#     content_type_json(),
-#     body = toJSON(
-#       list(
-#         contents = chatHistory,
-#         generationConfig = list(temperature = temperature)
-#       ),
-#       auto_unbox = T
-#     )
-#   )
-#   
-#   if (response$status_code > 200) {
-#     chatHistory <<- chatHistory[-length(chatHistory)]
-#     stop(paste("Status Code - ", response$status_code))
-#   } else {
-#     answer <- content(response)$candidates[[1]]$content$parts[[1]]$text
-#     chatHistory <<- append(chatHistory, list(list(
-#       role = 'model',
-#       parts = list(list(text = answer))
-#     )))
-#   }
-#   
-#   return(answer)
-#   
-# }
 
 # System Prompt type ####
 get_system_prompt <- function(system = c("general", "code")) {

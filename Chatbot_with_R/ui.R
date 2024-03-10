@@ -1,12 +1,19 @@
 #UI
 ui <- fluidPage(
   theme = bs_theme(bootswatch = "sketchy"),
-  titlePanel(title = "Chatbot with R"),
+  titlePanel(
+    fluidRow(
+      column(3,"Chatbot with R"), 
+      column(1, offset = 8, actionButton("logout", "", icon = icon("right-from-bracket")))
+      ),
+    windowTitle = "Chatbot with R"
+             ),
   page_sidebar(
     sidebar = sidebar(
       # open = "closed",
       selectInput("model", "Model",
-                  choices = c("gpt-3.5-turbo", "gemini-pro", "claude-2.1", "claude-instant")),
+                  choices = c("gpt-3.5-turbo", "gemini-pro", "claude-2.1", "claude-instant"), 
+                  selected = "gemini-pro"),
       selectInput("task", "Task",
                   choices = c("general", "code")),
       selectInput("response_type", "Response Type",
@@ -20,7 +27,7 @@ ui <- fluidPage(
         class = "m-2 btn-secondary"
       )
     ),
-  fluidRow(uiOutput("chat_history"))
+    fluidRow(uiOutput("chat_history"))
     )
     
 )

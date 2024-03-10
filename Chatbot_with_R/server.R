@@ -1,4 +1,14 @@
 server <- function(input, output, session) {
+  if(reload == 1){
+    session$reload()
+    reload <<- reload + 1
+  }
+  
+  observeEvent(input$logout,{
+    session$close()
+    stopApp()
+  })
+  
   rv <- reactiveValues()
   rv$chat_history <- NULL
   
@@ -6,11 +16,11 @@ server <- function(input, output, session) {
     req(input$prompt != "")
     
     if(input$response_type == "Precise"){
-      gemini_temp <- 0.0
+      gemini_temp <- 0.1
     } else if(input$response_type == "Balanced"){
       gemini_temp <- 0.5
     } else if(input$response_type == "Creative"){
-      gemini_temp <- 1
+      gemini_temp <- 0.9
     }
     
     showModal(modalDialog("Generating...", footer = NULL))
@@ -22,7 +32,8 @@ server <- function(input, output, session) {
         api_key = openai_api_key
       )
     } else if (input$model == "gemini-pro") {
-      response <- gemini(input$prompt, temperature = gemini_temp, api_key = gemini_api_key, max_retries = 10)
+      response <- gemini(input$prompt, temperature = gemini_temp, api_key = gemini_api_key, 
+                         max_retries = 10)
     } else if (input$model == "claude-2.1"){
       response <- create_completion_anthropic(input$prompt, key = claude_api_key, model = "claude-2.1", 
                                               history = rv$chat_history,) 
@@ -35,7 +46,7 @@ server <- function(input, output, session) {
     rv$chat_history <- update_history(rv$chat_history, input$prompt, response)
     
     output$chat_history <- renderUI(map(rv$chat_history, \(x) markdown(glue(
-      "{x$role}: {x$content}"
+      "<h3>{x$role}:</h3> \n\n{x$content}"
     ))))
   }) |> bindEvent(input$chat)
 }
