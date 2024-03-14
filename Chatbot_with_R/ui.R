@@ -1,34 +1,89 @@
 #UI
-ui <- fluidPage(
+ui <- bslib::page_fluid(
+  useWaiter(),
+  useShinyjs(),
+  use_copy(),
+  tags$head(tags$style(css)),
   theme = bs_theme(bootswatch = "sketchy"),
-  titlePanel(
-    fluidRow(
-      column(3,"Chatbot with R"), 
-      column(1, offset = 8, actionButton("logout", "", icon = icon("right-from-bracket")))
-      ),
-    windowTitle = "Chatbot with R"
-             ),
+  titlePanel(fluidRow(
+    column(3, "Chatbot with R"),
+    column(1, offset = 8, actionButton(
+      "logout", "", icon = icon("right-from-bracket")
+    ))
+  ),
+  windowTitle = "Chatbot with R"),
   page_sidebar(
     sidebar = sidebar(
-      # open = "closed",
-      selectInput("model", "Model",
-                  choices = c("gpt-3.5-turbo", "gemini-pro", "claude-2.1", "claude-instant"), 
-                  selected = "gemini-pro"),
-      selectInput("task", "Task",
-                  choices = c("general", "code")),
-      selectInput("response_type", "Response Type",
-                  choices = c("Precise", "Balanced", "Creative")),
-      textAreaInput("prompt", "Query", width = "800px", height = "200px"),
-      actionButton(
-        "chat",
-        "Send",
-        icon = icon("paper-plane"),
-        # width = "75px",
-        class = "m-2 btn-secondary"
+      selectInput("ai_type", "AI Type",
+                  choices = c("Generative", "Inferential")),
+      conditionalPanel(
+        condition = "input.ai_type == 'Generative'",
+        selectInput(
+          "model_gen",
+          "Generative AI Model",
+          choices = c("gpt-3.5-turbo", "gemini-pro", "claude-2.1", "claude-instant", 
+                      "google-gemma-7b-it", "Mixtral-8x7B-Instruct-v0.1", 
+                      "Mistral-7B-Instruct-v0.2"),
+          selected = "gemini-pro"
+        ),
+        selectInput("task", "Task",
+                    choices = c("general", "code")),
+        selectInput(
+          "response_type",
+          "Response Type",
+          choices = c("Precise", "Balanced", "Creative")
+        )
+      ),
+      conditionalPanel(
+        condition = "input.ai_type == 'Inferential'",
+        selectInput(
+          "model_inf",
+          "Inferential AI Model",
+          choices = c("Microsoft-phi2"),
+          selected = "Microsoft-phi2"
+        )
       )
     ),
-    fluidRow(uiOutput("chat_history"))
-    )
-    
-)
+    mainPanel(tags$div(
+      id = "chat-container",
+      tags$div(id = "chat-history",
+               uiOutput("chat_history")),
+      
+      tags$div(id = "chat-input",
+               tags$form(
+                 column(
+                   12,
+                   textAreaInput(
+                     inputId = "prompt",
+                     label = "",
+                     placeholder = "Type your message here...",
+                     width = "100%"
+                   )
+                 ),
+                 fluidRow(
+                   tags$div(
+                     style = "margin-left: 1.5em;",
+                     actionButton(
+                       inputId = "chat",
+                       label = "Send",
+                       icon = icon("paper-plane")
+                     ),
+                     actionButton(
+                       inputId = "remove_chatThread",
+                       label = "Clear History",
+                       icon = icon("trash-can")
+                     ),
+                     CopyButton(
+                       "clipbtn",
+                       label = "Copy conversation",
+                       icon = icon("clipboard"),
+                       text = ""
+                     )
+                     
+                   )
+                 )
+               ))
+    ))
+  )
   
+)
