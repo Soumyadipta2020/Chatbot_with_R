@@ -23,7 +23,7 @@ ui <- bslib::page_fluid(
           "Generative AI Model",
           choices = c("gpt-3.5-turbo", "gemini-pro", "claude-2.1", "claude-instant", 
                       "google-gemma-7b-it", "Mixtral-8x7B-Instruct-v0.1", 
-                      "Mistral-7B-Instruct-v0.2"),
+                      "Mistral-7B-Instruct-v0.2", "starcoder2-15b"),
           selected = "gemini-pro"
         ),
         selectInput("task", "Task",

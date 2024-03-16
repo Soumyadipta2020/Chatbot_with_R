@@ -30,6 +30,7 @@ server <- function(input, output, session) {
     }
     
     showModal(modalDialog("Generating...", footer = NULL))
+    
     if (input$model_gen == "gpt-3.5-turbo") {
       response <- chat(
         input$prompt,
@@ -86,6 +87,15 @@ server <- function(input, output, session) {
           prompt = input$prompt,
           token = hugging_api_key,
           max_new_tokens = 10000
+        )[[1]][[1]]
+    } else if (input$model_gen == "starcoder2-15b") {
+      response <- 
+        create_completion_huggingface(
+          model= "bigcode/starcoder2-15b",
+          history = rv$chat_history,
+          prompt = input$prompt,
+          token = hugging_api_key,
+          max_new_tokens = 1000
         )[[1]][[1]]
     }
     
