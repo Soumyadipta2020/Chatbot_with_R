@@ -32,15 +32,15 @@ ui <- bslib::page_fluid(
           "response_type",
           "Response Type",
           choices = c("Precise", "Balanced", "Creative")
-        )
+        ),
       ),
       conditionalPanel(
         condition = "input.ai_type == 'Inferential'",
         selectInput(
           "model_inf",
           "Inferential AI Model",
-          choices = c("Microsoft-phi2"),
-          selected = "Microsoft-phi2"
+          choices = c("Mistral-7B-v0.1", "google/gemma-7b"),
+          selected = "Mistral-7B-v0.1"
         )
       )
     ),

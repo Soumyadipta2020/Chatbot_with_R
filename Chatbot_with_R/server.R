@@ -31,73 +31,97 @@ server <- function(input, output, session) {
     
     showModal(modalDialog("Generating...", footer = NULL))
     
-    if (input$model_gen == "gpt-3.5-turbo") {
-      response <- chat(
-        input$prompt,
-        history = rv$chat_history,
-        system_prompt = input$task,
-        api_key = openai_api_key
-      )
-    } else if (input$model_gen == "gemini-pro") {
-      response <-
-        gemini(
+    if(input$ai_type == "Generative"){
+      if (input$model_gen == "gpt-3.5-turbo") {
+        response <- chat(
           input$prompt,
-          temperature = gemini_temp,
-          api_key = gemini_api_key,
-          max_retries = 10
+          history = rv$chat_history,
+          system_prompt = input$task,
+          api_key = openai_api_key
         )
-    } else if (input$model_gen == "claude-2.1") {
-      response <-
-        create_completion_anthropic(
-          input$prompt,
-          key = claude_api_key,
-          model = "claude-2.1",
-          history = rv$chat_history,
-        )
-    } else if (input$model_gen == "claude-instant") {
-      response <-
-        create_completion_anthropic(
-          input$prompt,
-          key = claude_api_key,
-          model = "claude-instant-1.2",
-          history = rv$chat_history,
-        )
-    } else if (input$model_gen == "google-gemma-7b-it") {
-      response <- 
-        create_completion_huggingface(
-          model= "google/gemma-7b-it",
-          history = rv$chat_history,
-          prompt = input$prompt,
-          token = hugging_api_key
-        )[[1]][[1]]
-    } else if (input$model_gen == "Mixtral-8x7B-Instruct-v0.1") {
-      response <- 
-        create_completion_huggingface(
-          model= "mistralai/Mixtral-8x7B-Instruct-v0.1",
-          history = rv$chat_history,
-          prompt = input$prompt,
-          token = hugging_api_key,
-          max_new_tokens = 10000
-        )[[1]][[1]]
-    } else if (input$model_gen == "Mistral-7B-Instruct-v0.2") {
-      response <- 
-        create_completion_huggingface(
-          model= "mistralai/Mistral-7B-Instruct-v0.2",
-          history = rv$chat_history,
-          prompt = input$prompt,
-          token = hugging_api_key,
-          max_new_tokens = 10000
-        )[[1]][[1]]
-    } else if (input$model_gen == "starcoder2-15b") {
-      response <- 
-        create_completion_huggingface(
-          model= "bigcode/starcoder2-15b",
-          history = rv$chat_history,
-          prompt = input$prompt,
-          token = hugging_api_key,
-          max_new_tokens = 1000
-        )[[1]][[1]]
+      } else if (input$model_gen == "gemini-pro") {
+        response <-
+          gemini(
+            input$prompt,
+            temperature = gemini_temp,
+            api_key = gemini_api_key,
+            max_retries = 10
+          )
+      } else if (input$model_gen == "claude-2.1") {
+        response <-
+          create_completion_anthropic(
+            input$prompt,
+            key = claude_api_key,
+            model = "claude-2.1",
+            history = rv$chat_history,
+          )
+      } else if (input$model_gen == "claude-instant") {
+        response <-
+          create_completion_anthropic(
+            input$prompt,
+            key = claude_api_key,
+            model = "claude-instant-1.2",
+            history = rv$chat_history,
+          )
+      } else if (input$model_gen == "google-gemma-7b-it") {
+        response <- 
+          create_completion_huggingface(
+            model= "google/gemma-7b-it",
+            history = rv$chat_history,
+            prompt = input$prompt,
+            token = hugging_api_key
+          )[[1]][[1]]
+      } else if (input$model_gen == "Mixtral-8x7B-Instruct-v0.1") {
+        response <- 
+          create_completion_huggingface(
+            model= "mistralai/Mixtral-8x7B-Instruct-v0.1",
+            history = rv$chat_history,
+            prompt = input$prompt,
+            token = hugging_api_key,
+            max_new_tokens = 10000
+          )[[1]][[1]]
+      } else if (input$model_gen == "Mistral-7B-Instruct-v0.2") {
+        response <- 
+          create_completion_huggingface(
+            model= "mistralai/Mistral-7B-Instruct-v0.2",
+            history = rv$chat_history,
+            prompt = input$prompt,
+            token = hugging_api_key,
+            max_new_tokens = 10000
+          )[[1]][[1]]
+      } else if (input$model_gen == "starcoder2-15b") {
+        response <- 
+          create_completion_huggingface(
+            model= "bigcode/starcoder2-15b",
+            history = rv$chat_history,
+            prompt = input$prompt,
+            token = hugging_api_key,
+            max_new_tokens = 1000
+          )[[1]][[1]]
+      }
+    } else if(input$ai_type == "Inferential"){
+      if (input$model_inf == "Mistral-7B-v0.1") {
+        response <- 
+          create_completion_huggingface(
+            model= "mistralai/Mistral-7B-v0.1",
+            history = NULL,
+            prompt = input$prompt,
+            token = hugging_api_key,
+            max_new_tokens = 1000
+          )[[1]][[1]]
+      } else if (input$model_inf == "google/gemma-7b") {
+        response <- 
+          create_completion_huggingface(
+            model= "google/gemma-7b",
+            history = NULL,
+            prompt = input$prompt,
+            token = hugging_api_key,
+            max_new_tokens = 1000
+          )[[1]][[1]]
+      }
     }
+    
+    
     
     removeModal()
     
