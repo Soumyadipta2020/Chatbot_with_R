@@ -15,15 +15,15 @@ ui <- bslib::page_fluid(
   page_sidebar(
     sidebar = sidebar(
       selectInput("ai_type", "AI Type",
-                  choices = c("Generative", "Inferential")),
+                  choices = c("Conversational", "Coding", "Inferential")),
       conditionalPanel(
-        condition = "input.ai_type == 'Generative'",
+        condition = "input.ai_type == 'Conversational'",
         selectInput(
           "model_gen",
           "Generative AI Model",
-          choices = c("gpt-3.5-turbo", "gemini-pro", "claude-2.1", "claude-instant", 
+          choices = c("Meta-Llama-3-8B-Instruct", "gpt-3.5-turbo", "gemini-pro", "claude-2.1", "claude-instant", 
                       "google-gemma-7b-it", "Mixtral-8x7B-Instruct-v0.1", 
-                      "Mistral-7B-Instruct-v0.2", "starcoder2-15b"),
+                      "Mistral-7B-Instruct-v0.2"),
           selected = "gemini-pro"
         ),
         selectInput("task", "Task",
@@ -41,6 +41,15 @@ ui <- bslib::page_fluid(
           "Inferential AI Model",
           choices = c("Mistral-7B-v0.1", "google/gemma-7b"),
           selected = "Mistral-7B-v0.1"
+        )
+      ),
+      conditionalPanel(
+        condition = "input.ai_type == 'Coding'",
+        selectInput(
+          "model_cod",
+          "Inferential AI Model",
+          choices = c("starcoder2-15b"),
+          selected = "starcoder2-15b"
         )
       )
     ),
