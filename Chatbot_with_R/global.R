@@ -12,6 +12,7 @@ library(markdown)
 library(waiter)
 library(shinyjs)
 library(dplyr)
+library(officer)
 
 source("helper.R")
 css <- sass(sass_file("www/chat.scss"))

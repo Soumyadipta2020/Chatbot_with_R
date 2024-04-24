@@ -15,7 +15,8 @@ ui <- bslib::page_fluid(
   page_sidebar(
     sidebar = sidebar(
       selectInput("ai_type", "AI Type",
-                  choices = c("Conversational", "Coding", "Inferential")),
+                  choices = c("Conversational", "Coding", "Inferential"#, "Summarization"
+                              )),
       conditionalPanel(
         condition = "input.ai_type == 'Conversational'",
         selectInput(
@@ -47,11 +48,21 @@ ui <- bslib::page_fluid(
         condition = "input.ai_type == 'Coding'",
         selectInput(
           "model_cod",
-          "Inferential AI Model",
+          "Coder AI Model",
           choices = c("starcoder2-15b"),
           selected = "starcoder2-15b"
         )
       )
+      # ,
+      # conditionalPanel(
+      #   condition = "input.ai_type == 'Summarization'",
+      #   selectInput(
+      #     "model_sum",
+      #     "Text Summarization AI Model",
+      #     choices = c("starcoder2-15b"),
+      #     selected = "starcoder2-15b"
+      #   )
+      # )
     ),
     mainPanel(tags$div(
       id = "chat-container",
@@ -60,8 +71,9 @@ ui <- bslib::page_fluid(
       
       tags$div(id = "chat-input",
                tags$form(
+                 fluidRow(
                  column(
-                   12,
+                   width = 9,
                    textAreaInput(
                      inputId = "prompt",
                      label = "",
@@ -69,6 +81,9 @@ ui <- bslib::page_fluid(
                      width = "100%"
                    )
                  ),
+                 column(width = 3, offset = 0, 
+                   fileInput("file", "Upload word document", accept = ".docx")
+                 )),
                  fluidRow(
                    tags$div(
                      style = "margin-left: 1.5em;",

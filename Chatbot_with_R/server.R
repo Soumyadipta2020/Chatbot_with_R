@@ -29,12 +29,21 @@ server <- function(input, output, session) {
       gemini_temp <- 0.9
     }
     
+    prompt = input$prompt
+    
+    if(!is.null(input$file$datapath)){
+      sample_data <- read_docx(input$file$datapath)
+      content <- docx_summary(sample_data)
+      temp_text <- paste(content$text, collapse=" ")
+      prompt <- paste(prompt, temp_text, sep = "  -  ")
+    }
+    
     showModal(modalDialog("Generating...", footer = NULL))
     
     if(input$ai_type == "Conversational"){
       if (input$model_gen == "gpt-3.5-turbo") {
         response <- chat(
-          input$prompt,
+          prompt,
           history = rv$chat_history,
           system_prompt = input$task,
           api_key = openai_api_key
@@ -42,7 +51,7 @@ server <- function(input, output, session) {
       } else if (input$model_gen == "gemini-pro") {
         response <-
           gemini(
-            input$prompt,
+            prompt,
             temperature = gemini_temp,
             api_key = gemini_api_key,
             max_retries = 10
@@ -50,7 +59,7 @@ server <- function(input, output, session) {
       } else if (input$model_gen == "claude-2.1") {
         response <-
           create_completion_anthropic(
-            input$prompt,
+            prompt,
             key = claude_api_key,
             model = "claude-2.1",
             history = rv$chat_history,
@@ -58,7 +67,7 @@ server <- function(input, output, session) {
       } else if (input$model_gen == "claude-instant") {
         response <-
           create_completion_anthropic(
-            input$prompt,
+            prompt,
             key = claude_api_key,
             model = "claude-instant-1.2",
             history = rv$chat_history,
@@ -68,7 +77,7 @@ server <- function(input, output, session) {
           create_completion_huggingface(
             model= "google/gemma-1.1-7b-it",
             history = rv$chat_history,
-            prompt = input$prompt,
+            prompt = prompt,
             token = hugging_api_key
           )[[1]][[1]]
       } else if (input$model_gen == "Mixtral-8x7B-Instruct-v0.1") {
@@ -76,7 +85,7 @@ server <- function(input, output, session) {
           create_completion_huggingface(
             model= "mistralai/Mixtral-8x7B-Instruct-v0.1",
             history = rv$chat_history,
-            prompt = input$prompt,
+            prompt = prompt,
             token = hugging_api_key,
             max_new_tokens = 10000
           )[[1]][[1]]
@@ -85,7 +94,7 @@ server <- function(input, output, session) {
           create_completion_huggingface(
             model= "mistralai/Mistral-7B-Instruct-v0.2",
             history = rv$chat_history,
-            prompt = input$prompt,
+            prompt = prompt,
             token = hugging_api_key,
             max_new_tokens = 10000
           )[[1]][[1]]
@@ -94,7 +103,7 @@ server <- function(input, output, session) {
           create_completion_huggingface(
             model= "meta-llama/Meta-Llama-3-8B-Instruct",
             history = rv$chat_history,
-            prompt = input$prompt,
+            prompt = prompt,
             token = hugging_api_key,
             max_new_tokens = 1000
           )[[1]][[1]]
@@ -105,7 +114,7 @@ server <- function(input, output, session) {
           create_completion_huggingface(
             model= "mistralai/Mistral-7B-v0.1",
             history = NULL,
-            prompt = input$prompt,
+            prompt = prompt,
             token = hugging_api_key,
             max_new_tokens = 1000
           )[[1]][[1]]
@@ -114,7 +123,7 @@ server <- function(input, output, session) {
           create_completion_huggingface(
             model= "google/gemma-7b",
             history = NULL,
-            prompt = input$prompt,
+            prompt = prompt,
             token = hugging_api_key,
             max_new_tokens = 1000
           )[[1]][[1]]
@@ -125,7 +134,7 @@ server <- function(input, output, session) {
           create_completion_huggingface(
             model= "bigcode/starcoder2-15b",
             history = rv$chat_history,
-            prompt = input$prompt,
+            prompt = prompt,
             token = hugging_api_key,
             max_new_tokens = 1000
           )[[1]][[1]]
@@ -135,6 +144,7 @@ server <- function(input, output, session) {
     
     
     removeModal()
+    reset("file")
     
     rv$chat_history <-
       update_history(rv$chat_history, input$prompt, response)
