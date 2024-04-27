@@ -31,16 +31,23 @@ server <- function(input, output, session) {
     
     prompt = input$prompt
     
-    if(!is.null(input$file$datapath)){
-      sample_data <- read_docx(input$file$datapath)
-      content <- docx_summary(sample_data)
-      temp_text <- paste(content$text, collapse=" ")
-      prompt <- paste(prompt, temp_text, sep = "  -  ")
+    if (!is.null(input$file$datapath)) {
+      if (str_detect(input$file$datapath, ".doc") == TRUE) {
+        sample_data <- read_docx(input$file$datapath)
+        content <- docx_summary(sample_data)
+        temp_text <- paste(content$text, collapse = " ")
+        prompt <- paste(prompt, temp_text, sep = "  -  ")
+      } else if (str_detect(input$file$datapath, ".pptx") == TRUE) {
+        sample_data <- read_pptx(input$file$datapath)
+        content <- pptx_summary(sample_data)
+        temp_text <- paste(content$text, collapse = " ")
+        prompt <- paste(prompt, temp_text, sep = "  -  ")
+      }
     }
     
     showModal(modalDialog("Generating...", footer = NULL))
     
-    if(input$ai_type == "Conversational"){
+    if (input$ai_type == "Conversational") {
       if (input$model_gen == "gpt-3.5-turbo") {
         response <- chat(
           prompt,
@@ -73,66 +80,74 @@ server <- function(input, output, session) {
             history = rv$chat_history,
           )
       } else if (input$model_gen == "google-gemma-7b-it") {
-        response <- 
+        response <-
           create_completion_huggingface(
-            model= "google/gemma-1.1-7b-it",
+            model = "google/gemma-1.1-7b-it",
             history = rv$chat_history,
             prompt = prompt,
             token = hugging_api_key
           )[[1]][[1]]
       } else if (input$model_gen == "Mixtral-8x7B-Instruct-v0.1") {
-        response <- 
+        response <-
           create_completion_huggingface(
-            model= "mistralai/Mixtral-8x7B-Instruct-v0.1",
+            model = "mistralai/Mixtral-8x7B-Instruct-v0.1",
             history = rv$chat_history,
             prompt = prompt,
             token = hugging_api_key,
             max_new_tokens = 10000
           )[[1]][[1]]
       } else if (input$model_gen == "Mistral-7B-Instruct-v0.2") {
-        response <- 
+        response <-
           create_completion_huggingface(
-            model= "mistralai/Mistral-7B-Instruct-v0.2",
+            model = "mistralai/Mistral-7B-Instruct-v0.2",
             history = rv$chat_history,
             prompt = prompt,
             token = hugging_api_key,
             max_new_tokens = 10000
           )[[1]][[1]]
       } else if (input$model_gen == "Meta-Llama-3-8B-Instruct") {
-        response <- 
+        response <-
           create_completion_huggingface(
-            model= "meta-llama/Meta-Llama-3-8B-Instruct",
+            model = "meta-llama/Meta-Llama-3-8B-Instruct",
             history = rv$chat_history,
             prompt = prompt,
             token = hugging_api_key,
             max_new_tokens = 1000
           )[[1]][[1]]
-      } 
-    } else if(input$ai_type == "Inferential"){
-      if (input$model_inf == "Mistral-7B-v0.1") {
-        response <- 
+      } else if (input$model_gen == "microsoft-Phi-3-mini") {
+        response <-
           create_completion_huggingface(
-            model= "mistralai/Mistral-7B-v0.1",
+            model = "microsoft/Phi-3-mini-4k-instruct",
+            history = rv$chat_history,
+            prompt = prompt,
+            token = hugging_api_key
+          )[[1]][[1]]
+      }
+    } else if (input$ai_type == "Inferential") {
+      if (input$model_inf == "Mistral-7B-v0.1") {
+        response <-
+          create_completion_huggingface(
+            model = "mistralai/Mistral-7B-v0.1",
             history = NULL,
             prompt = prompt,
             token = hugging_api_key,
             max_new_tokens = 1000
           )[[1]][[1]]
       } else if (input$model_inf == "google/gemma-7b") {
-        response <- 
+        response <-
           create_completion_huggingface(
-            model= "google/gemma-7b",
+            model = "google/gemma-7b",
             history = NULL,
             prompt = prompt,
             token = hugging_api_key,
             max_new_tokens = 1000
           )[[1]][[1]]
       }
-    } else if(input$ai_type == "Coding"){
+    } else if (input$ai_type == "Coding") {
       if (input$model_cod == "starcoder2-15b") {
-        response <- 
+        response <-
           create_completion_huggingface(
-            model= "bigcode/starcoder2-15b",
+            model = "bigcode/starcoder2-15b",
             history = rv$chat_history,
             prompt = prompt,
             token = hugging_api_key,
