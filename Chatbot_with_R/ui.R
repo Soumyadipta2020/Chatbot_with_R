@@ -1,7 +1,7 @@
 #UI
 ui <- bslib::page_fluid(
   useWaiter(),
-  useShinyjs(),
+  shinyjs::useShinyjs(),
   use_copy(),
   tags$head(tags$style(css)),
   theme = bs_theme(bootswatch = "sketchy"),
@@ -67,6 +67,7 @@ ui <- bslib::page_fluid(
       mainPanel(tags$div(
         id = "chat-container",
         tags$div(id = "chat-history",
+                 style = "overflow-y: scroll;",
                  uiOutput("chat_history")),
         
         tags$div(id = "chat-input",

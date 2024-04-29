@@ -12,7 +12,7 @@ server <- function(input, output, session) {
   rv <- reactiveValues()
   rv$chat_history <- NULL
   
-  observe({
+  observeEvent(input$chat,{
     req(input$prompt != "")
     
     # Spinner
@@ -44,8 +44,6 @@ server <- function(input, output, session) {
         prompt <- paste(prompt, temp_text, sep = "  -  ")
       }
     }
-    
-    showModal(modalDialog("Generating...", footer = NULL))
     
     if (input$ai_type == "Conversational") {
       if (input$model_gen == "gpt-3.5-turbo") {
@@ -157,8 +155,6 @@ server <- function(input, output, session) {
     }
     
     
-    
-    removeModal()
     reset("file")
     
     rv$chat_history <-
@@ -170,10 +166,20 @@ server <- function(input, output, session) {
       )))
     
     w$hide()
-    execute_at_next_input(runjs(jscode))
     
-  }) |> bindEvent(input$chat)
+    showModal(modalDialog(
+      title = "",
+      "Generation complete!",
+      footer = tagList(actionButton("close_win","Close"))
+    ))
+    Sys.sleep(0.5)
+    click("close_win")
+  }) 
   
+  observeEvent(input$close_win,{
+    removeModal()
+    shinyjs::runjs(jscode_1)
+  })
   
   observe({
     req(input$clipbtn)

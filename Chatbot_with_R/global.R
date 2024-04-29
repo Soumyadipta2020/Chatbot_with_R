@@ -17,27 +17,13 @@ library(stringr)
 
 source("helper.R")
 css <- sass(sass_file("www/chat.scss"))
-jscode <-
-  'var container = document.getElementById("chat-container");
-if (container) {
-  var elements = container.getElementsByClassName("user-message");
-  if (elements.length > 1) {
-    var lastElement = elements[elements.length - 1];
-    lastElement.scrollIntoView({
-      behavior: "smooth"
-    });
-  }
-}'
 
-execute_at_next_input <-
-  function(expr, session = getDefaultReactiveDomain()) {
-    observeEvent(once = TRUE,
-                 reactiveValuesToList(session$input),
-                 {
-                   force(expr)
-                 },
-                 ignoreInit = TRUE)
-  }
+jscode_1 <- '
+      var container = document.getElementById("chat-history");
+      if (container) {
+        container.scrollTop = container.scrollHeight;
+      }
+    '
 
 openai_api_key <<-
   "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"
