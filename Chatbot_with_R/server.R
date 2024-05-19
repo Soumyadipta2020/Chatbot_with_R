@@ -5,6 +5,7 @@ server <- function(input, output, session) {
   }
   
   observeEvent(input$logout, {
+    rv$chat_history <- NULL
     session$close()
     stopApp()
   })
@@ -120,6 +121,15 @@ server <- function(input, output, session) {
             prompt = prompt,
             token = hugging_api_key
           )[[1]][[1]]
+      } else if (input$model_gen == "01-ai/Yi-1.5") {
+        response <-
+          create_completion_huggingface(
+            model = "01-ai/Yi-1.5-34B-Chat",
+            history = rv$chat_history,
+            prompt = prompt,
+            token = hugging_api_key,
+            max_new_tokens = 1000
+          )[[1]][[1]]
       }
     } else if (input$ai_type == "Inferential") {
       if (input$model_inf == "Mistral-7B-v0.1") {
@@ -172,7 +182,7 @@ server <- function(input, output, session) {
       "Generation complete!",
       footer = tagList(actionButton("close_win","Close"))
     ))
-    Sys.sleep(0.5)
+    Sys.sleep(1)
     click("close_win")
   }) 
   
