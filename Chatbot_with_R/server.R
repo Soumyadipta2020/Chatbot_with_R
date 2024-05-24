@@ -7,6 +7,7 @@ server <- function(input, output, session) {
   
   #### logout ####
   observeEvent(input$logout, {
+    browseURL("https://sites.google.com/view/soumyadipta-das")
     rv$chat_history <- NULL
     session$close()
     stopApp()
