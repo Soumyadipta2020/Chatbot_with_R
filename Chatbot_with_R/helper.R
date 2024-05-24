@@ -6,8 +6,7 @@ chat <- function(user_message,
   system   <- get_system_prompt(system_prompt)
   prompt   <- prepare_prompt(user_message, system, history)
   base_url <- "https://api.openai.com/v1"
-  body     <- list(model = "gpt-3.5-turbo",
-                   messages = prompt)
+  body     <- list(model = "gpt-3.5-turbo", messages = prompt)
   req <-
     resp <-
     request(base_url) |>
@@ -32,7 +31,6 @@ gemini <- function(prompt,
                    api_key ,
                    model = "gemini-pro",
                    max_retries = 3) {
-  
   if (nchar(api_key) < 1) {
     api_key <- readline("Paste your API key here: ")
     Sys.setenv(GEMINI_API_KEY = api_key)
@@ -41,15 +39,11 @@ gemini <- function(prompt,
   model_query <- paste0(model, ":generateContent")
   
   # Add new message
-  if(!exists("chatHistory")){
-    chatHistory <<- list(list(
-      role = 'user',
-      parts = list(list(text = prompt))
-    ))
+  if (!exists("chatHistory")) {
+    chatHistory <<- list(list(role = 'user', parts = list(list(text = prompt))))
   } else{
     chatHistory <<- append(chatHistory, list(list(
-      role = 'user',
-      parts = list(list(text = prompt))
+      role = 'user', parts = list(list(text = prompt))
     )))
   }
   
@@ -78,15 +72,18 @@ gemini <- function(prompt,
     if (!is.null(response) && response$status_code <= 200) {
       answer <- content(response)$candidates[[1]]$content$parts[[1]]$text
       chatHistory <<- append(chatHistory, list(list(
-        role = 'model',
-        parts = list(list(text = answer))
+        role = 'model', parts = list(list(text = answer))
       )))
       return(answer)
     } else if (i < max_retries) {
       cat("API call failed. Retrying attempt ", i, "...\n")
       Sys.sleep(2 ^ i)  # Exponential backoff for retry delays
     } else {
-      stop(paste("Failed to access Gemini API after", max_retries, "retries."))
+      stop(paste(
+        "Failed to access Gemini API after",
+        max_retries,
+        "retries."
+      ))
     }
   }
 }
@@ -95,9 +92,7 @@ gemini <- function(prompt,
 get_system_prompt <- function(system = c("general", "code")) {
   rlang::arg_match(system)
   instructions <-
-    switch(system,
-           "general" = "You are a helpful assistant.",
-           "code"    = "You are a helpful chat bot that answers questions for an R programmer working in the RStudio IDE.")
+    switch(system, "general" = "You are a helpful assistant.", "code"    = "You are a helpful chat bot that answers questions for an R programmer working in the RStudio IDE.")
   list(list(role = "system", content = instructions))
 }
 
@@ -109,9 +104,8 @@ prepare_prompt <- function(user_message, system_prompt, history) {
 
 # History maintain ####
 update_history <- function(history, user_message, response) {
-  c(history,
-    list(
-      list(role = "user", content = user_message),
-      list(role = "assistant", content = response)
-    )) |> purrr::compact()
+  c(history, list(
+    list(role = "user", content = user_message),
+    list(role = "assistant", content = response)
+  )) |> purrr::compact()
 }

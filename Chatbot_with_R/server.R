@@ -16,7 +16,7 @@ server <- function(input, output, session) {
   rv <- reactiveValues()
   rv$chat_history <- NULL
   
-  observeEvent(input$chat,{
+  observeEvent(input$chat, {
     req(input$prompt != "")
     
     ##### uploaded file validation #####
@@ -26,16 +26,18 @@ server <- function(input, output, session) {
       match = sum(str_detect(supported_type, file_type))
       
       modal_test <- supported_type[1]
-      for(i in 2:length(supported_type)){
+      for (i in 2:length(supported_type)) {
         modal_test <- paste(modal_test, supported_type[i], sep = ', ')
       }
       
-      if(match == 0){
+      if (match == 0) {
         showModal(modalDialog(
           title = "Uploaded file type error:",
-          paste("The uploaded file type should be with extensions:", modal_test),
-          footer = tagList(tagList(
-            modalButton("close")))
+          paste(
+            "The uploaded file type should be with extensions:",
+            modal_test
+          ),
+          footer = tagList(tagList(modalButton("close")))
         ))
         reset("file")
         reset("prompt")
@@ -213,14 +215,14 @@ server <- function(input, output, session) {
     showModal(modalDialog(
       title = "",
       "Generation complete!",
-      footer = tagList(actionButton("close_win","Close"))
+      footer = tagList(actionButton("close_win", "Close"))
     ))
     Sys.sleep(1)
     click("close_win")
-  }) 
+  })
   
   #### Update page after completion ####
-  observeEvent(input$close_win,{
+  observeEvent(input$close_win, {
     removeModal()
     shinyjs::runjs(jscode_1)
     reset("prompt")
@@ -238,7 +240,7 @@ server <- function(input, output, session) {
       final <- final %>% bind_rows(user_out, content_out)
     }
     
-  #### copy button ####  
+    #### copy button ####
     CopyButtonUpdate(
       session,
       id = "clipbtn",
