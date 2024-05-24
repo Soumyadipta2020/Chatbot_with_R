@@ -6,7 +6,7 @@ ui <- bslib::page_fluid(
   tags$head(tags$style(css)),
   theme = bs_theme(bootswatch = "sketchy"),
   titlePanel(fluidRow(
-    column(3, "Chatbot with R"),
+    column(3, "Multimodal Chatbot"),
     column(1, offset = 8, actionButton(
       "logout", "", icon = icon("right-from-bracket")
     ))
@@ -38,11 +38,9 @@ ui <- bslib::page_fluid(
             ),
             selected = "Meta-Llama-3-8B-Instruct"
           ),
-          selectInput("task", "Task",
-                      choices = c("general", "code")),
           selectInput(
             "response_type",
-            "Response Type",
+            "Response Type (For gemini only)",
             choices = c("Precise", "Balanced", "Creative")
           ),
         ),

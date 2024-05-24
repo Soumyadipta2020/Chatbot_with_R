@@ -1,27 +1,56 @@
 server <- function(input, output, session) {
-  if (reload == 1) {
-    session$reload()
-    reload <<- reload + 1
-  }
+  #### reload at login ####
+  # if (reload == 1) {
+  #   session$reload()
+  #   reload <<- reload + 1
+  # }
   
+  #### logout ####
   observeEvent(input$logout, {
     rv$chat_history <- NULL
     session$close()
     stopApp()
   })
   
+  #### chat ####
   rv <- reactiveValues()
   rv$chat_history <- NULL
   
   observeEvent(input$chat,{
     req(input$prompt != "")
     
-    # Spinner
+    ##### uploaded file validation #####
+    if (!is.null(input$file$datapath)) {
+      file_type <- str_sub(input$file$datapath, start = -4)
+      supported_type = c(".docx", ".pptx")
+      match = sum(str_detect(supported_type, file_type))
+      
+      modal_test <- supported_type[1]
+      for(i in 2:length(supported_type)){
+        modal_test <- paste(modal_test, supported_type[i], sep = ', ')
+      }
+      
+      if(match == 0){
+        showModal(modalDialog(
+          title = "Uploaded file type error:",
+          paste("The uploaded file type should be with extensions:", modal_test),
+          footer = tagList(tagList(
+            modalButton("close")))
+        ))
+        reset("file")
+        reset("prompt")
+      }
+      
+      req(match > 0)
+    }
+    
+    ##### Spinner #####
     w <- Waiter$new(id = "chat-history",
                     html = spin_3(),
                     color = transparent(.5))
     w$show()
     
+    ##### gemini temperature #####
     if (input$response_type == "Precise") {
       gemini_temp <- 0.1
     } else if (input$response_type == "Balanced") {
@@ -32,8 +61,9 @@ server <- function(input, output, session) {
     
     prompt = input$prompt
     
+    ##### read uploaded files #####
     if (!is.null(input$file$datapath)) {
-      if (str_detect(input$file$datapath, ".doc") == TRUE) {
+      if (str_detect(input$file$datapath, ".docx") == TRUE) {
         sample_data <- read_docx(input$file$datapath)
         content <- docx_summary(sample_data)
         temp_text <- paste(content$text, collapse = " ")
@@ -46,12 +76,13 @@ server <- function(input, output, session) {
       }
     }
     
+    ##### connecting with LLM's #####
     if (input$ai_type == "Conversational") {
       if (input$model_gen == "gpt-3.5-turbo") {
         response <- chat(
           prompt,
           history = rv$chat_history,
-          system_prompt = input$task,
+          system_prompt = "general",
           api_key = openai_api_key
         )
       } else if (input$model_gen == "gemini-pro") {
@@ -164,9 +195,10 @@ server <- function(input, output, session) {
       }
     }
     
-    
+    ##### reset uploaded file #####
     reset("file")
     
+    ##### update history & render #####
     rv$chat_history <-
       update_history(rv$chat_history, input$prompt, response)
     
@@ -177,6 +209,7 @@ server <- function(input, output, session) {
     
     w$hide()
     
+    ##### modal for completion #####
     showModal(modalDialog(
       title = "",
       "Generation complete!",
@@ -186,11 +219,13 @@ server <- function(input, output, session) {
     click("close_win")
   }) 
   
+  #### Update page after completion ####
   observeEvent(input$close_win,{
     removeModal()
     shinyjs::runjs(jscode_1)
+    reset("prompt")
   })
-  
+  #### chat history ####
   observe({
     req(input$clipbtn)
     temp <- rv$chat_history
@@ -203,6 +238,7 @@ server <- function(input, output, session) {
       final <- final %>% bind_rows(user_out, content_out)
     }
     
+  #### copy button ####  
     CopyButtonUpdate(
       session,
       id = "clipbtn",
@@ -212,6 +248,7 @@ server <- function(input, output, session) {
     )
   })
   
+  #### Clear history ####
   observeEvent(input$remove_chatThread, {
     output$chat_history <- renderUI({
       return(NULL)
