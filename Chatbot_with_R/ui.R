@@ -32,7 +32,7 @@ ui <- bslib::page_fluid(
             "claude-instant",
             "google-gemma-7b-it",
             "Mixtral-8x7B-Instruct-v0.1",
-            "Mistral-7B-Instruct-v0.2",
+            "Mistral-7B-Instruct-v0.3",
             "01-ai/Yi-1.5"
           ),
           selected = "Meta-Llama-3-8B-Instruct"

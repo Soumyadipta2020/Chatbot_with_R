@@ -128,10 +128,10 @@ server <- function(input, output, session) {
             token = hugging_api_key,
             max_new_tokens = 10000
           )[[1]][[1]]
-      } else if (input$model_gen == "Mistral-7B-Instruct-v0.2") {
+      } else if (input$model_gen == "Mistral-7B-Instruct-v0.3") {
         response <-
           create_completion_huggingface(
-            model = "mistralai/Mistral-7B-Instruct-v0.2",
+            model = "mistralai/Mistral-7B-Instruct-v0.3",
             history = rv$chat_history,
             prompt = prompt,
             token = hugging_api_key,
@@ -199,6 +199,8 @@ server <- function(input, output, session) {
     
     ##### reset uploaded file #####
     reset("file")
+    
+    response <- gsub(" \nAssistant:\n", "", response)
     
     ##### update history & render #####
     rv$chat_history <-
