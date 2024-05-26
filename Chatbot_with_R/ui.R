@@ -4,7 +4,7 @@ ui <- bslib::page_fluid(
   shinyjs::useShinyjs(),
   use_copy(),
   tags$head(tags$style(css)),
-  theme = bs_theme(bootswatch = "sketchy"),
+  theme = bs_theme(bootswatch = "zephyr"),
   titlePanel(fluidRow(
     column(3, "Multimodal Chatbot"),
     column(1, offset = 8, actionButton(

@@ -7,6 +7,7 @@ server <- function(input, output, session) {
   
   #### logout ####
   observeEvent(input$logout, {
+    print("logout")
     rv$chat_history <- NULL
     session$close()
     stopApp()
@@ -251,6 +252,7 @@ server <- function(input, output, session) {
       text = as.character(final$output)
     )
   })
+  
   
   #### Clear history ####
   observeEvent(input$remove_chatThread, {

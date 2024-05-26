@@ -15,6 +15,8 @@ library(dplyr)
 library(officer)
 library(stringr)
 
+thematic::thematic_shiny(font = "auto")
+
 source("helper.R")
 css <- sass(sass_file("www/chat.scss"))
 

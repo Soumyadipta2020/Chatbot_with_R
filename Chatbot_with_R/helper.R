@@ -38,7 +38,7 @@ gemini <- function(prompt,
   
   model_query <- paste0(model, ":generateContent")
   
-  # Add new message
+  # Add new message #####
   if (!exists("chatHistory")) {
     chatHistory <<- list(list(role = 'user', parts = list(list(text = prompt))))
   } else{
