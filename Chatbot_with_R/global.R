@@ -14,6 +14,7 @@ library(shinyjs)
 library(dplyr)
 library(officer)
 library(stringr)
+library(openai)
 
 thematic::thematic_shiny(font = "auto")
 

@@ -53,15 +53,6 @@ server <- function(input, output, session) {
                     color = transparent(.5))
     w$show()
     
-    ##### gemini temperature #####
-    if (input$response_type == "Precise") {
-      gemini_temp <- 0.1
-    } else if (input$response_type == "Balanced") {
-      gemini_temp <- 0.5
-    } else if (input$response_type == "Creative") {
-      gemini_temp <- 0.9
-    }
-    
     prompt = input$prompt
     
     ##### read uploaded files #####
@@ -86,13 +77,14 @@ server <- function(input, output, session) {
           prompt,
           history = rv$chat_history,
           system_prompt = "general",
-          api_key = openai_api_key
+          api_key = openai_api_key, 
+          temp = input$temperature
         )
       } else if (input$model_gen == "gemini-pro") {
         response <-
           gemini(
             prompt,
-            temperature = gemini_temp,
+            temperature = input$temperature,
             api_key = gemini_api_key,
             max_retries = 10
           )
@@ -120,7 +112,7 @@ server <- function(input, output, session) {
             prompt = prompt,
             token = hugging_api_key
           )[[1]][[1]]
-      } else if (input$model_gen == "Mixtral-8x7B-Instruct-v0.1") {
+      } else if (input$model_gen == "Mixtral-v0.1") {
         response <-
           create_completion_huggingface(
             model = "mistralai/Mixtral-8x7B-Instruct-v0.1",
@@ -129,7 +121,7 @@ server <- function(input, output, session) {
             token = hugging_api_key,
             max_new_tokens = 10000
           )[[1]][[1]]
-      } else if (input$model_gen == "Mistral-7B-Instruct-v0.3") {
+      } else if (input$model_gen == "Mistral-v0.3") {
         response <-
           create_completion_huggingface(
             model = "mistralai/Mistral-7B-Instruct-v0.3",
@@ -138,7 +130,7 @@ server <- function(input, output, session) {
             token = hugging_api_key,
             max_new_tokens = 10000
           )[[1]][[1]]
-      } else if (input$model_gen == "Meta-Llama-3-8B-Instruct") {
+      } else if (input$model_gen == "Meta-Llama-3") {
         response <-
           create_completion_huggingface(
             model = "meta-llama/Meta-Llama-3-8B-Instruct",
@@ -155,7 +147,7 @@ server <- function(input, output, session) {
             prompt = prompt,
             token = hugging_api_key
           )[[1]][[1]]
-      } else if (input$model_gen == "01-ai/Yi-1.5") {
+      } else if (input$model_gen == "Yi-1.5") {
         response <-
           create_completion_huggingface(
             model = "01-ai/Yi-1.5-34B-Chat",

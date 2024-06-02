@@ -24,24 +24,30 @@ ui <- bslib::page_fluid(
           "model_gen",
           "Generative AI Model",
           choices = c(
-            "Meta-Llama-3-8B-Instruct",
+            "Meta-Llama-3",
             "gpt-3.5-turbo",
             "gemini-pro",
             "microsoft-Phi-3-mini",
             "claude-2.1",
             "claude-instant",
             "google-gemma-7b-it",
-            "Mixtral-8x7B-Instruct-v0.1",
-            "Mistral-7B-Instruct-v0.3",
-            "01-ai/Yi-1.5"
+            "Mixtral-v0.1",
+            "Mistral-v0.3",
+            "Yi-1.5"
           ),
           selected = "Meta-Llama-3-8B-Instruct"
         ),
-        selectInput(
-          "response_type",
-          "Response Type (For gemini only)",
-          choices = c("Precise", "Balanced", "Creative")
+        sliderInput(
+          "temperature",
+          "Temperature (For gemini & gpt-3.5 only)",
+          min = 0,
+          max = 1,
+          value = 0.5, 
+          step = 0.1
         ),
+        "Temp = 0 : Precise", br(),
+        "Temp = 0.5 : Balanced", br(),
+        "Temp = 1 : Creative"
       ),
       conditionalPanel(
         condition = "input.ai_type == 'Inferential'",

@@ -2,11 +2,12 @@
 chat <- function(user_message,
                  history = NULL,
                  system_prompt = c("general", "code"),
-                 api_key) {
+                 api_key, 
+                 temp) {
   system   <- get_system_prompt(system_prompt)
   prompt   <- prepare_prompt(user_message, system, history)
   base_url <- "https://api.openai.com/v1"
-  body     <- list(model = "gpt-3.5-turbo", messages = prompt)
+  body     <- list(model = "gpt-3.5-turbo", messages = prompt, temperature = temp)
   req <-
     resp <-
     request(base_url) |>
