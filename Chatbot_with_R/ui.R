@@ -25,7 +25,7 @@ ui <- bslib::page_fluid(
           "Generative AI Model",
           choices = c(
             "Meta-Llama-3",
-            "gpt-3.5-turbo",
+            # "gpt-3.5-turbo",
             "gemini-pro",
             "microsoft-Phi-3-mini",
             "claude-2.1",
