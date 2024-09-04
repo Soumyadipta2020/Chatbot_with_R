@@ -24,22 +24,23 @@ ui <- bslib::page_fluid(
           "model_gen",
           "Generative AI Model",
           choices = c(
+            "Meta-Llama-3.1",
             "Meta-Llama-3",
             # "gpt-3.5-turbo",
             "gemini-pro",
             "microsoft-Phi-3-mini",
-            "claude-2.1",
-            "claude-instant",
+            # "claude-2.1",
+            # "claude-instant",
             "google-gemma-7b-it",
             "Mixtral-v0.1",
             "Mistral-v0.3",
             "Yi-1.5"
           ),
-          selected = "Meta-Llama-3-8B-Instruct"
+          selected = "Meta-Llama-3.1"
         ),
         sliderInput(
           "temperature",
-          "Temperature (For gemini & gpt-3.5 only)",
+          "Temperature (For gemini & llama-3.1 only)",
           min = 0,
           max = 1,
           value = 0.5, 
@@ -63,9 +64,20 @@ ui <- bslib::page_fluid(
         selectInput(
           "model_cod",
           "Coder AI Model",
-          choices = c("starcoder2-15b"),
+          choices = c("starcoder2-15b", "google/codegemma-7b"),
           selected = "starcoder2-15b"
-        )
+        ),
+        sliderInput(
+          "temperature",
+          "Temperature (For codegemma only)",
+          min = 0,
+          max = 1,
+          value = 0.5, 
+          step = 0.1
+        ),
+        "Temp = 0 : Precise", br(),
+        "Temp = 0.5 : Balanced", br(),
+        "Temp = 1 : Creative"
       )
     ),
     mainPanel(tags$div(

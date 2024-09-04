@@ -80,6 +80,15 @@ server <- function(input, output, session) {
           api_key = openai_api_key, 
           temp = input$temperature
         )
+      } else if (input$model_gen == "Meta-Llama-3.1") {
+        response <-
+          chat_nvidia(
+            prompt,
+            history = rv$chat_history,
+            temp = input$temperature,
+            api_key = nv_api_key,
+            model_llm = "meta/llama-3.1-8b-instruct"
+          )
       } else if (input$model_gen == "gemini-pro") {
         response <-
           gemini(
@@ -187,7 +196,16 @@ server <- function(input, output, session) {
             token = hugging_api_key,
             max_new_tokens = 1000
           )[[1]][[1]]
-      }
+      } else if (input$model_cod == "google/codegemma-7b") {
+        response <-
+          chat_nvidia(
+            prompt,
+            history = rv$chat_history,
+            temp = input$temperature,
+            api_key = nv_api_key,
+            model_llm = "google/codegemma-7b"
+          )
+      } 
     }
     
     ##### reset uploaded file #####

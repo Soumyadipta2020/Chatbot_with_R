@@ -28,10 +28,11 @@ jscode_1 <- '
       }
     '
 
-openai_api_key <<- "sk-proj-3UmC10TAyJ8CULw8hvQDT3BlbkFJKm2pe6yFDBDkNOYPr0Yg"
-gemini_api_key <<- "AIzaSyBc8XOg3B7sY7n5VDsy5SgIT8baqsbFdGc"
+openai_api_key <<- ""
+gemini_api_key <<- ""
 claude_api_key <<-
-  "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"
-hugging_api_key <<- "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"
+  ""
+hugging_api_key <<- ""
+nv_api_key <- ''
 
 reload <<- 1
