@@ -205,6 +205,15 @@ server <- function(input, output, session) {
             api_key = nv_api_key,
             model_llm = "google/codegemma-7b"
           )
+      } else if (input$model_cod == "meta/llama-3.1") {
+        response <-
+          chat_nvidia(
+            prompt,
+            history = rv$chat_history,
+            temp = input$temperature,
+            api_key = nv_api_key,
+            model_llm = "meta/llama-3.1-405b-instruct"
+          )
       } 
     }
     

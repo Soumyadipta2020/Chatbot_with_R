@@ -64,12 +64,12 @@ ui <- bslib::page_fluid(
         selectInput(
           "model_cod",
           "Coder AI Model",
-          choices = c("starcoder2-15b", "google/codegemma-7b"),
+          choices = c("starcoder2-15b", "google/codegemma-7b", "meta/llama-3.1"),
           selected = "starcoder2-15b"
         ),
         sliderInput(
           "temperature",
-          "Temperature (For codegemma only)",
+          "Temperature (For codegemma & llama 3.1 only)",
           min = 0,
           max = 1,
           value = 0.5, 
