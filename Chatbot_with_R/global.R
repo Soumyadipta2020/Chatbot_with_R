@@ -19,6 +19,8 @@ library(openai)
 thematic::thematic_shiny(font = "auto")
 
 source("helper.R")
+source("api.R")
+
 css <- sass(sass_file("www/chat.scss"))
 
 jscode_1 <- '
@@ -27,12 +29,5 @@ jscode_1 <- '
         container.scrollTop = container.scrollHeight;
       }
     '
-
-openai_api_key <<- ""
-gemini_api_key <<- ""
-claude_api_key <<-
-  ""
-hugging_api_key <<- ""
-nv_api_key <- ''
 
 reload <<- 1
