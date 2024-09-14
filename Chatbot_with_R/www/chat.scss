@@ -1,4 +1,4 @@
-$primary-color: #4caf50;
+$primary-color: #0556ad;
 $secondary-color: #f5f5f5;
 $border-color: #ccc;
 $box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
@@ -16,7 +16,7 @@ pre code {border: none !important;}
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  font-family: "open sans",arial,verdana;
+  font-family: "open sans","arial","verdana";
 }
 
 @media only screen and (max-width: 768px) {
@@ -76,9 +76,10 @@ pre code {border: none !important;}
 }
 
 #chat-input {
-  background-color: $secondary-color;
+  /*background-color: #000;*/
   padding: 10px;
-  border-radius: 0 0 5px 5px;
+  border-radius: 5px 5px 5px 5px;
+  border-color: #fff;
 }
 
 
@@ -116,3 +117,18 @@ pre code {border: none !important;}
 	max-width: 100%; width: 45px; 
       height: 45px; border-radius: 100%;
 }
+
+/* select input */
+.selectize-input {
+    color: #FFFFFF;            /* Text color */
+    /*background-color: #0d6efd;  Background color of selected item */ 
+  }
+  
+  .selectize-dropdown-content .option {
+    color: #FFFFFF;            /* Text color of options */
+  }
+  
+  .selectize-dropdown-content .option.selected {
+    /*background-color: #0d6efd;  Background color of selected option */
+    /*color: #FFFFFF;            Text color of selected option */
+  }

@@ -1,15 +1,24 @@
 #UI
 ui <- bslib::page_fluid(
+  gitlink::ribbon_css("https://github.com/Soumyadipta2020/Chatbot_with_R", position = "right", border_color = "black", 
+                      font_color = "black", fade = TRUE),
   useWaiter(),
   shinyjs::useShinyjs(),
   use_copy(),
   tags$head(tags$style(css)),
-  theme = bs_theme(bootswatch = "zephyr"),
+  theme = bs_theme(bootswatch = "darkly",
+                   version = 5,
+                   success = "#86C7ED",
+                   "table-color" = "#86C7ED",
+                   base_font = font_google("Lato"),
+                   heading_font = font_face(family = "Open Sauce Sans",
+                                            src = "url('../OpenSauceSans-Regular.ttf') format('truetype')")
+                   ),
   titlePanel(fluidRow(
     column(3, "Multimodal Chatbot"),
-    column(1, offset = 8, actionButton(
-      "logout", "", icon = icon("right-from-bracket")
-    ))
+    # column(1, offset = 8, actionButton(
+    #   "logout", "", icon = icon("right-from-bracket")
+    # ))
   ), windowTitle = "Multimodal Chatbot"),
   page_sidebar(
     sidebar = sidebar(

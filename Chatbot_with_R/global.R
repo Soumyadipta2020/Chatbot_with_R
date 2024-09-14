@@ -16,7 +16,7 @@ library(officer)
 library(stringr)
 library(openai)
 
-thematic::thematic_shiny(font = "auto")
+thematic::thematic_shiny()
 
 source("helper.R")
 source("api.R")
