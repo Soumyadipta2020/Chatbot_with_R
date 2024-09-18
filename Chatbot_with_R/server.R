@@ -95,7 +95,8 @@ server <- function(input, output, session) {
             prompt,
             temperature = input$temperature,
             api_key = gemini_api_key,
-            max_retries = 10
+            max_retries = 10,
+            model = "gemini-1.5-pro-001"
           )
       } else if (input$model_gen == "claude-2.1") {
         response <-
