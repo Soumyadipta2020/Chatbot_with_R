@@ -33,8 +33,9 @@ ui <- bslib::page_fluid(
           "model_gen",
           "Generative AI Model",
           choices = c(
-            "Meta-Llama-3.1",
+            "Meta-Llama-3.2",
             "Meta-Llama-3",
+            "HuggingFaceTB",
             # "gpt-3.5-turbo",
             "gemini-pro",
             "microsoft-Phi-3-mini",
@@ -73,7 +74,7 @@ ui <- bslib::page_fluid(
         selectInput(
           "model_cod",
           "Coder AI Model",
-          choices = c("starcoder2-15b", "google/codegemma-7b", "meta/llama-3.1"),
+          choices = c("starcoder2-15b", "meta/llama-3.2"),
           selected = "starcoder2-15b"
         ),
         sliderInput(

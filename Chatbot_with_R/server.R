@@ -80,15 +80,14 @@ server <- function(input, output, session) {
           api_key = openai_api_key, 
           temp = input$temperature
         )
-      } else if (input$model_gen == "Meta-Llama-3.1") {
+      } else if (input$model_gen == "Meta-Llama-3.2") {
         response <-
-          chat_nvidia(
-            prompt,
+          create_completion_huggingface(
+            model = "meta-llama/Llama-3.2-3B-Instruct",
             history = rv$chat_history,
-            temp = input$temperature,
-            api_key = nv_api_key,
-            model_llm = "meta/llama-3.1-8b-instruct"
-          )
+            prompt = prompt,
+            token = hugging_api_key
+          )[[1]][[1]]
       } else if (input$model_gen == "gemini-pro") {
         response <-
           gemini(
@@ -166,6 +165,15 @@ server <- function(input, output, session) {
             token = hugging_api_key,
             max_new_tokens = 1000
           )[[1]][[1]]
+      } else if (input$model_gen == "HuggingFaceTB") {
+        response <-
+          create_completion_huggingface(
+            model = "HuggingFaceTB/SmolLM2-1.7B-Instruct",
+            history = rv$chat_history,
+            prompt = prompt,
+            token = hugging_api_key,
+            max_new_tokens = 1000
+          )[[1]][[1]]
       }
     } else if (input$ai_type == "Inferential") {
       if (input$model_inf == "Mistral-7B-v0.1") {
@@ -206,15 +214,14 @@ server <- function(input, output, session) {
             api_key = nv_api_key,
             model_llm = "google/codegemma-7b"
           )
-      } else if (input$model_cod == "meta/llama-3.1") {
+      } else if (input$model_cod == "meta/llama-3.2") {
         response <-
-          chat_nvidia(
-            prompt,
+          create_completion_huggingface(
+            model = "meta-llama/Llama-3.2-3B-Instruct",
             history = rv$chat_history,
-            temp = input$temperature,
-            api_key = nv_api_key,
-            model_llm = "meta/llama-3.1-405b-instruct"
-          )
+            prompt = prompt,
+            token = hugging_api_key
+          )[[1]][[1]]
       } 
     }
     
